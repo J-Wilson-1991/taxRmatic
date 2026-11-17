@@ -1,0 +1,510 @@
+---
+title: "Preparing CSV data for taxRmatic"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Preparing CSV data for taxRmatic}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", eval = FALSE)
+```
+
+# Working through the example and preparing your CSVs
+
+**Start here after installing taxRmatic using the README.** The aim is to help you run the included example, see where its text comes from, and then make a small, controlled change of your own. You can read this guide in a browser while running the commands in the RStudio **Console**. The code examples are shown for you to copy; merely opening the vignette does not run them.
+
+The learning sequence is: **run the unchanged example → copy its files → inspect each spreadsheet → change one value → regenerate the text**. Once that makes sense, move to the customisation vignette. Use a function help page only when you need an argument not covered here.
+
+## Why taxRmatic uses structured data
+
+Writing a taxonomic revision involves two rather different kinds of work. First, we make decisions about specimens, characters, species limits and diagnostic differences. Second, we turn that information into consistently worded species accounts, often repeating the same formatting conventions dozens of times. **taxRmatic is designed to separate these tasks.** It keeps the biological information in tables and applies rules for presenting that information when the manuscript is generated.
+
+This separation has a practical advantage: if a measurement, taxonomic identification or figure number changes, you edit the source data and regenerate the text. You do not have to locate every occurrence of that information in a Word manuscript. It also means the same source data can be presented according to the conventions of different journals or taxonomic groups without restructuring the underlying research data.
+
+There is an initial investment in setting up the tables. The aim of this guide is to explain **why the tables are organised as they are**, which parts taxRmatic actually requires, and how to adapt them to your own revision. It is not necessary to adopt the particular morphological characters, headings or locality fields used by the example.
+
+## Follow the example before making your own files
+
+The installed package includes five CSVs representing five **entirely fictional** species of *Exemplomygale*. They were adapted from the structure of a real research workflow, but the names, specimens, locations and biological data have been fictionalised. The figure table contains metadata, not images. Use these files as working templates, not as biological records.
+
+```{r find-data}
+library(taxRmatic)
+data_dir <- system.file("extdata", "basic", package = "taxRmatic", mustWork = TRUE)
+list.files(data_dir)
+
+# Open the accompanying, complete R workflow:
+file.edit(system.file("examples", "01_basic_workflow.R",
+                      package = "taxRmatic", mustWork = TRUE))
+```
+
+The five input files are:
+
+| File | What it supplies to the manuscript |
+|:--|:--|
+| `character_state_matrix.csv` | Morphological characters and instructions for building natural-language descriptions |
+| `figures.csv` | Figure and figure-part metadata for dynamic references |
+| `specimens.csv` | Specimen and locality information for material examined |
+| `diagnostics.csv` | Explicitly authored comparative statements for diagnoses |
+| `sections.csv` | Already-written text such as etymologies, remarks, distributions and natural history |
+
+The **first distinction to remember** is that *required columns* and *required values* are not the same thing. A column may be needed to establish a consistent structure even when some, or all, of its cells are empty. For instance, a `specimen_code` column must exist in the character matrix, but a description need not be linked to a physical specimen.
+
+Prepare the tables in Excel, LibreOffice Calc or another spreadsheet program, then save each as **CSV UTF-8**. The package reads CSV files, not Excel formulas or workbook formatting. If you use formulas to calculate ratios or construct strings, check the displayed results before exporting. Values such as `5-10` may be silently converted into dates by spreadsheet software; decimal precision and leading zeros can also change. taxRmatic normally uses the textual values present in the exported CSV rather than rounding them for you.
+
+# Before you start: what you will do
+
+This is a **hands-on guide for taxonomists with little R experience**. It assumes you know what taxonomic treatments are, but not how taxRmatic organises or generates them. You do not need to know how to write R functions. You should be comfortable opening a spreadsheet, changing cells and saving a file. RStudio is the program in which you will run the supplied commands; **R** is the language that executes them.
+
+By the end, you should be able to:
+
+1. Run the complete fictional example and find its output manuscript.
+2. Open the five input CSVs and understand which parts you may change.
+3. Make a personal copy of those files without changing the installed package.
+4. Recognise how a character, specimen or figure entry becomes manuscript text.
+5. Start replacing the example with your own taxonomic data.
+
+**A few terms used throughout:** A **CSV** is a plain-text spreadsheet file, with one row per record and named columns. An **object** is information held temporarily in R; for example, `figures` will be the imported figure table. An **argument** is a setting supplied inside a function's parentheses. An **R script** is a saved list of commands, usually ending in `.R`. Lines beginning with `#` are explanatory comments and are not run.
+
+## Step 1. Confirm the example works before editing anything
+
+Open RStudio. Type the following into the **Console** (usually the lower-left pane) and press Enter. You can copy the whole block at once.
+
+```{r first-run}
+library(taxRmatic)
+
+example_script <- system.file(
+  "examples", "01_basic_workflow.R",
+  package = "taxRmatic", mustWork = TRUE
+)
+file.edit(example_script)
+```
+
+This opens the example R script. Read its numbered steps from top to bottom. To run the *entire* script, return to the Console and enter:
+
+```{r run-example}
+source(example_script, echo = TRUE)
+```
+
+It should finish by reporting that `taxRmatic_basic_example.md` was written. **Markdown** (`.md`) is a plain-text manuscript format containing markers for headings and italics; taxRmatic can also produce Word documents. To find the output folder, run:
+
+```{r find-output}
+getwd()
+```
+
+If you prefer a Word file, work in your **copied script** (the next step explains how to make one). Find the optional `write_taxRmatic_output(..., output_format = "word_document")` command near its end, remove the initial `#` marks to enable those lines, then rerun the script. Word export needs `rmarkdown` and Pandoc (normally included with RStudio). If an example fails, resolve that before editing the biological data: it gives you a reliable point of comparison.
+
+## Step 2. Make your own editable copies of the spreadsheets
+
+The bundled example files are inside the *installed package*. Do **not** edit them there: your changes could disappear when the package is reinstalled. Instead, choose a normal folder for your revision. For example, create a folder called `taxRmatic_practice` in your user directory, then put a `data` folder inside it. You can use R to copy the five example files:
+
+```{r copy-data}
+# This example creates a folder in your user directory. Change the path if you prefer.
+project_dir <- file.path(path.expand("~"), "taxRmatic_practice")
+dir.create(project_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(file.path(project_dir, "data"), showWarnings = FALSE)
+
+example_data <- system.file(
+  "extdata", "basic", package = "taxRmatic", mustWork = TRUE
+)
+file.copy(
+  list.files(example_data, pattern = "\\.csv$", full.names = TRUE),
+  file.path(project_dir, "data"), overwrite = FALSE
+)
+list.files(file.path(project_dir, "data"))
+```
+
+The last command should show the five CSV filenames. Open these copies in Excel or another spreadsheet editor. Save them as **CSV UTF-8**, not `.xlsx`. A CSV does not preserve worksheets, formatting or Excel formulas: its contents are the text and numbers that taxRmatic will read.
+
+To adapt the example workflow, save an editable copy of the R script in your project folder as well:
+
+```{r copy-script}
+file.copy(example_script, file.path(project_dir, "my_workflow.R"), overwrite = FALSE)
+file.edit(file.path(project_dir, "my_workflow.R"))
+```
+
+Near the beginning of `my_workflow.R`, replace the original `data_dir <- system.file(...)` line with:
+
+```{r point-to-copies}
+data_dir <- file.path(path.expand("~"), "taxRmatic_practice", "data")
+```
+
+Now your script reads **your copies**, not the installed examples. Save the changed script in RStudio with **Ctrl + S** (or **File → Save**). Later you can run it from the Console with `source(file.path(project_dir, "my_workflow.R"))`. The output is written to the **current working directory** (`getwd()`); you can adjust `output_path` near the end of the script to save directly into your project folder.
+
+## Step 3. Understand how the five tables fit together
+
+Each table answers a different question. The character matrix answers *what should a description say?*; the figure table answers *which illustration goes with that text?*; the specimen table answers *which material was examined?*; diagnostics records *which species are distinguished from which other species, and how?*; and the sections table stores *the paragraphs you have already written*. The R script reads each and assembles a treatment, much like you would assemble material examined, diagnosis, description, etymology and remarks in a manuscript.
+
+You can inspect a CSV directly from R without changing it:
+
+```{r inspect-csv}
+# The first six lines show the column headings and some records.
+head(read.csv(file.path(data_dir, "sections.csv"), check.names = FALSE))
+```
+
+This vignette now explains each table in turn. It is normal if the character matrix looks unfamiliar at first; work with the *example* before designing your own matrix.
+
+# 1. Character-state matrix: data and writing instructions in one table
+
+## Why the matrix looks unusual
+
+A conventional morphological character matrix often has specimens as rows and characters as columns. A taxRmatic matrix retains that useful organisation, but adds a few **instruction rows** above the descriptions. These specify how each character should appear in prose: whether it is printed, which paragraph and sentence it belongs to, what words are placed before or after its value, and which illustrations to cite.
+
+This may initially look more complicated than a plain character matrix. Its purpose is to avoid hard-coding the natural-language structure into R functions. A mygalomorph spider description could have paragraphs called *Body*, *Leg I* and *Pedipalp*; a wasp description might instead use *Head*, *Mesosoma* and *Metasoma*. The R workflow can remain identical. You alter the instruction rows, not the code.
+
+For the same reason, **a description row is not necessarily an individual specimen**. It can represent a male, a female, a juvenile, a population, or a species-level summary. Decide what each row represents before entering characters. If your revision describes a holotype male and a separately illustrated female, use two description rows. If you prefer one composite species description, a single description row may be appropriate.
+
+## A small worked example
+
+Imagine the following fragment of a matrix, with three biological characters. This is a simplified illustration; the actual CSV must also contain all the other required instruction rows.
+
+| `row_type` | `carapace length` | `carapace colour` | `leg I colour` |
+|:--|:--|:--|:--|
+| `print` | `y` | `y` | `y` |
+| `paragraph` | `body` | `body` | `leg I` |
+| `sentence` | `carapace` | `carapace` | `leg I` |
+| `clause` | *(blank)* | *(blank)* | *(blank)* |
+| `prefix` | `carapace length` | *(blank)* | `leg I` |
+| `suffix` | `mm` | *(blank)* | *(blank)* |
+| `description` | `5.8` | `orange` | `pale orange` |
+
+With suitable metadata columns and the other instruction rows present, the description generator can turn these values into text along these lines:
+
+> **Body.** Carapace length 5.8 mm; orange.  
+> **Leg I.** Leg I pale orange.
+
+Notice that the cells contain observations, while the instructions determine presentation. If a journal requests paragraphs without headings, change the **generation argument** controlling paragraph headings. If you want the leg colour in the body paragraph, change its `paragraph` entry. The morphological observation itself remains `pale orange`.
+
+### Paragraph, sentence and clause: three levels for a reason
+
+These labels do different jobs and should not be confused:
+
+- **`paragraph`** gathers related information into a larger descriptive unit, optionally with a printed heading.
+- **`sentence`** groups characters within that paragraph. Within a sentence, separate clauses are joined using semicolons.
+- **`clause`** optionally ties especially closely related characters together, using commas rather than semicolons.
+
+For example, the lengths of femur, patella, tibia, metatarsus and tarsus are closely related measurements. Giving them a shared sentence and, where useful, a shared clause allows a compact string such as `Fe 4.2, Pa 2.1, Ti 3.0 ...`, rather than a succession of disconnected statements. A foveal shape and carapace colour might belong to the same sentence but to different clauses, separated by a semicolon.
+
+**Why is `clause` optional but `paragraph` and `sentence` required?** Every printed character needs a defined location in the overall text. Clause grouping, by contrast, is only useful when you intentionally want to join characters more closely. A blank clause is treated as its own clause. If a character is marked `y` under `print`, it **must** have both `paragraph` and `sentence` values, even if its `clause` is blank.
+
+## Reserved columns and rows
+
+Four columns are required: `row_type`, `taxon`, `title` and `specimen_code`. Description rows require a `taxon` and a **unique** `title`; `specimen_code` is optional in every row. One `taxon` is associated with each description row. If several specimens underpin a composite description, you can list their codes separated by commas.
+
+The matrix must contain exactly one instruction row of each type below, plus at least one `description` row:
+
+| `row_type` | Why it exists | What you enter |
+|:--|:--|:--|
+| `print` | Allows a large research matrix to contain characters not used in the current manuscript | `y` for characters to include; leave others blank |
+| `paragraph` | Controls larger descriptive units | A paragraph label for **every printed character** |
+| `sentence` | Controls which characters form a sentence | A sentence label for **every printed character** |
+| `clause` | Joins strongly related information more naturally | Shared labels when needed; otherwise blank |
+| `prefix` | Avoids repeating descriptive wording in every specimen row | Text before the value, e.g. `carapace length` |
+| `suffix` | Keeps units and repeated phrases consistent | Text after the value, e.g. `mm` |
+| `figure_filter` | Attaches relevant illustrations without manually entering figure numbers | Optional filter against figure metadata |
+| `description` | Holds the biological observations | One or more rows, each with a `taxon` and unique `title` |
+
+The presence of the instruction rows is mandatory, **not** the presence of values in every cell of those rows. Additional non-standard instruction rows are permitted for internal notes and other metadata, but are not interpreted by the ordinary description generator. You may also keep extra character or calculation columns that are not printed, leaving them unmarked in `print`.
+
+### Why prefixes and suffixes are separate from character states
+
+Suppose you have measured carapace length in 100 spiders. The values should be `5.8`, `6.1`, `7.0` and so on, not 100 individually typed phrases such as `carapace length 5.8 mm`. Store `carapace length` in the `prefix` row, `mm` in the `suffix` row, and the observations in the description rows. This reduces repetitive entry and makes changes in terminology or units much easier to apply consistently.
+
+**Be careful not to duplicate words.** If the prefix says `each maxilla with about` and the suffix says `cuspules`, a cell should contain `10-15`, not `about 10-15 cuspules`. The same rule applies to phrases embedded in a suffix. taxRmatic assembles the pieces you supply; it cannot reliably infer which words are redundant.
+
+### Missing characters are not missing descriptions
+
+For a female description, male pedipalp characters can simply be blank. For a male, spermathecal characters can be blank. Printed character **columns** still need their instruction metadata, but an individual **description row** can leave irrelevant observations empty. The corresponding character statements will then be omitted. This avoids creating separate character templates for every sex or life stage.
+
+```{r read-characters}
+characters <- read_taxRmatic_character_state_matrix(
+  file.path(data_dir, "character_state_matrix.csv")
+)
+
+# Explore the instructions and observations separately:
+head(characters$character_information)
+head(characters$character_state_matrix)
+```
+
+If import reports that a printed character lacks `paragraph` or `sentence`, return to the CSV, find that **column**, and fill the named instruction row. It is not necessary to fill these values under unprinted characters. For full validation rules, see `?read_taxRmatic_character_state_matrix`.
+
+# 2. Figure metadata: describe what is illustrated, not where it appears in Word
+
+## Why figures are represented by rows
+
+Figure numbers and plates often change repeatedly during manuscript preparation. If figure citations are embedded manually in hundreds of descriptions and diagnoses, every rearrangement may require many corrections. taxRmatic instead stores a **figure lookup table**. A character statement can request something like “the dorsal prosoma of this specimen” and the software identifies the corresponding figure number and part.
+
+Each CSV row represents a **whole figure or a figure part**. The table does *not* contain image files. Its other columns describe the illustrated material: taxon, specimen, morphological feature, angle, sex, scale, or any additional characteristic that is useful when selecting an illustration.
+
+The required columns are `figure_number`, `figure_part`, `taxon` and `specimen_code`. `figure_number` must be scored in every row. `figure_part` can be empty for an unlettered whole figure, but a given figure number cannot mix lettered and unlettered rows. A `figure_number`/`figure_part` combination must be unique.
+
+## Why the extra metadata columns are yours to define
+
+The example uses fields such as `feature`, `angle`, `specimen_category`, `side` and `tag`. These **are not a universal prescribed scheme**. You might use `structure`, `view`, `sex`, `life_stage`, `habitat` or `technique` instead. The useful choice is whichever set of fields lets you reliably identify the illustrations you want to cite.
+
+Importantly, there is **no requirement for standardised plates**. You can reference a plate with male habitus and palps, a single spermatheca drawing, a habitat photograph, a distribution map, or an irregular assortment of figures. Each part simply gets metadata suitable for finding it. Regular plates are convenient to enter, but not a technical requirement.
+
+| Figure | Part | `taxon` | `feature` | `angle` |
+|:--|:--|:--|:--|:--|
+| 2 | A | `Exemplomygale silvatica` | `prosoma` | `dorsal` |
+| 2 | B | `Exemplomygale silvatica` | `prosoma` | `ventral` |
+| 2 | C | `Exemplomygale silvatica` | `eye group` | `dorsal` |
+| 20 | *(blank)* | `Exemplomygale spinosa` | `habitat` | *(blank)* |
+
+The last row is a *hypothetical* unlettered figure, shown to illustrate that figures do not need parts A, B, C, etc. It is not a row in the bundled example.
+
+## Building figure filters
+
+Figure filters use column names and values from the **figure table**. They are not R expressions. For example:
+
+| Filter | Meaning |
+|:--|:--|
+| `feature = prosoma` | Choose prosoma illustrations |
+| `feature = prosoma & angle = dorsal` | Choose only dorsal prosoma illustrations |
+| `feature = prosoma OR eye group` | Accept either of two values within `feature` |
+| `feature = prosoma & angle = dorsal; feature = mouthparts` | Combine dorsal prosoma illustrations **or** any mouthparts illustrations |
+
+The operators have different scopes: `=` pairs a column and its values; uppercase **`OR`** (with spaces) lists alternative values **within one column**; `&` combines conditions that must all be true; `;` joins alternative complete filter sets. For an exact interpretation, see `?parse_figure_filter`.
+
+When used in a character matrix, taxRmatic first restricts figures to the relevant **taxon** and, where available, **specimen code**, then applies the `figure_filter`. This is why `specimen_code` exists in both the character matrix and figure metadata: the same species may have several illustrated specimens, and we often want a holotype description to cite only images of its holotype.
+
+A specimen code must match across files; use the same identifier consistently even if you print a differently formatted museum registration number in the material examined list. Figure `specimen_code` cells may contain comma-separated codes; additional multivalued metadata columns can be specified with `split_columns` and `split_char` when importing.
+
+```{r read-figures}
+figures <- read_taxRmatic_figures(file.path(data_dir, "figures.csv"))
+
+# For a project where one metadata cell contains several values separated by ';':
+# figures <- read_taxRmatic_figures("my_figures.csv",
+#                                  split_columns = c("taxon", "feature"),
+#                                  split_char = ";")
+```
+
+## Using figure tags in text that was written manually
+
+The same metadata can be used in etymologies, remarks or any other free-text section. Write a placeholder such as `fg{tag = demo_map}` where the reference should appear. When `finalise_taxRmatic_text()` runs, it resolves the tag using `figures.csv`. This is particularly useful for maps: changing the map's figure number in the metadata is enough to update its citations throughout the manuscript.
+
+A placeholder left in the final output, or an unexpected figure citation, is a reason to check whether the relevant metadata and filter actually match. It is not necessary to enter figure numbers manually in the descriptive text.
+
+# 3. Specimen data: preserve your database structure where possible
+
+## Why this table is intentionally permissive
+
+Natural history collections differ enormously in how they store collecting events, locality descriptions, coordinates, collector names, dates and specimen registration numbers. Imposing one fixed table of locality fields would make taxRmatic harder to use, not easier. The specimen table therefore reserves only the few fields needed for **taxon and type/locality grouping**, while leaving the fields used in the printed specimen string to the user.
+
+This means you **do not** have to reduce a specimen's locality to `country`, `state` and `site`. You can keep `verbatim locality`, `distance from landmark`, `habitat`, `GPS precision`, `coordinates`, `method`, or any other columns you already use. Later, `fields_to_concat` tells the package which columns to print and in which order.
+
+## Why there are exactly four structural columns
+
+The required columns are `taxon`, `type_status`, `country` and `state`. Every record must have a `taxon` and `country`. The `type_status` column can be blank for non-types, and `state` can be left entirely blank within a country. If states are used for one country, however, they must be filled for **every specimen from that country**, so the grouping is consistent.
+
+- `taxon` determines which species account receives the specimen.
+- `type_status` groups type specimens separately from non-types. Use a singular value such as `holotype` or `paratype` only for actual types. **Leave it empty for non-types**; never enter `other material examined` in this column because taxRmatic generates that heading itself.
+- `country` and `state` allow nested geographical headings to be generated automatically. The `state` field can represent a province, territory or comparable administrative level rather than literally an Australian state.
+
+Suppose a project has three different locality components: `district`, `site` and `microhabitat`. Those fields are still available for printing, but none is needed to determine type-status/country/state grouping. This division keeps the grouping structure predictable while allowing locality prose to reflect your data and journal requirements.
+
+## From raw columns to a printed material record
+
+For the fictional specimen `DEMO 9002`, the table stores the `regno` as `9002`, the date and collector in separate columns, and latitude/longitude as numeric-looking text. The workflow creates formatted fields **before** the material-examined function is called:
+
+```{r format-specimens}
+specimens <- read_taxRmatic_specimen_data(file.path(data_dir, "specimens.csv"))
+
+# Prefix and suffix add printable syntax without editing every record.
+specimens$registration <- format_custom_fields(
+  specimens, list(prefix("(DEMO "), column("regno"), suffix(")"))
+)
+
+# A formatted coordinate column is optional. Use existing formatted
+# coordinate fields directly if your collection database supplies them.
+specimens$latitude_final <- format_coordinates(
+  specimens$`latitude dd`, input_format = "dd_signed",
+  output_format = "dms", coordinate_type = "latitude",
+  precision = "min", output_style = "compact"
+)
+```
+
+This illustrates a broader principle: **prepare fields once, and choose how they print later**. The package does not require you to use its optional date, coordinate, specimen-count or custom-field formatting helpers. If your database already exports the strings you want, keep them.
+
+```{r material}
+# Here, specimens$registration has been defined above.
+# The other printed field names are present in the bundled specimen table.
+material_simple <- get_taxRmatic_material_examined(
+  specimens,
+  fields_to_concat = c("specimen counts", "exact location",
+                       "collection date", "collectors", "registration")
+)
+```
+
+The order in `fields_to_concat` becomes the order of details in each specimen entry. This is why different projects can retain their original database fields and still produce manuscripts with different conventions.
+
+## When should repeated collecting data be compressed?
+
+Several specimens may share a locality, date and collectors. Writing those details repeatedly makes material lists long and difficult to read. taxRmatic can replace repeated fields with a phrase such as `same data`, but **compression is a presentation decision**: you must decide which fields really define equivalent collecting data. Two specimens collected at the same named locality on different dates are not necessarily identical records. Neither are two specimens with different coordinates if those coordinates matter to your account.
+
+The full example shows how to use `compress_same_data = TRUE` and choose the comparison, prefix and suffix fields. Review a few compressed entries before applying the same configuration across a revision. For the complete set of arguments, see `?get_taxRmatic_material_examined`.
+
+# 4. Diagnoses: store the comparisons you intend to make
+
+## Why this is a separate table
+
+The diagnostics table is separate from the character-state matrix because **a description reports what a taxon is like**, whereas **a diagnosis explains how it differs from other taxa**. The same feature can be descriptive but not diagnostic, and a diagnostic difference may depend on which species are included in a comparison.
+
+The diagnostics table does not attempt to infer taxonomic distinctions from arbitrary character measurements. **You specify the diagnostic statements and the relevant comparison taxa.** taxRmatic assembles those statements into coherent diagnoses and can attach appropriate comparative figures. The biological judgement remains yours.
+
+## Why the table has categories, subsets and statement types
+
+Each row is a piece of diagnostic prose rather than a specimen. The required column names are:
+
+`taxon_subset`, `subsection`, `specimen_category`, `statement_type`, `starting_text`, `taxon`, `comparison_text`, `comparison_taxon`, `figure_filter`, `statement`.
+
+The columns allow several distinct decisions to be made independently:
+
+- **`taxon_subset`** defines the pool within which comparisons make sense (for example geographic regions or a predefined species group). Either score it for all rows or leave it blank for all rows.
+- **`specimen_category`** determines which evidence category is being compared, such as `male`, `female` or `molecular`. It is also used to match relevant figure metadata.
+- **`subsection`** is the heading *printed* for that category, such as `Male morphology`. It is not the matching key used to select figures.
+- **`statement_type`** is `prefix`, `comparison` or `suffix`. Prefixes introduce the diagnosis; comparisons establish differences; suffixes can add remarks such as which sex is unknown.
+- **`taxon`** identifies the focal taxa to which the statement applies. A comma-separated list can reuse a statement for several species.
+- **`comparison_taxon`** identifies the taxa from which the focal taxon is distinguished; `comparison_text` supplies linking prose (for example `can be distinguished from those of`).
+- **`figure_filter`** optionally selects the feature used in a comparison, such as `feature = tibia I`.
+- **`statement`** contains the substantive diagnostic observation.
+
+Only some cells are mandatory for each statement type. In particular, every row needs a `taxon`, `statement_type` and `statement`; comparison rows additionally require `specimen_category`, `comparison_text` and `comparison_taxon`. A column must exist even when it can be left blank in particular rows.
+
+## How iterative diagnosis formation works
+
+An ordinary diagnosis may contain several differences, with some differences useful against more than one comparison taxon. Writing every eligible statement for every species can create long, repetitive text. taxRmatic therefore **selects a set of your statements that covers as many relevant comparison taxa as possible**, rather than automatically printing every row in the diagnostic table.
+
+For **one focal taxon and one `specimen_category`** (for example, males), the process is:
+
+1. Identify the comparison taxa represented in that `taxon_subset` and category. Only this pool is considered, not every taxon named elsewhere in your revision.
+2. Find the statements whose `taxon` field includes the focal species.
+3. Choose the statement that covers the **largest number of comparison taxa not yet accounted for**. If two statements cover the same number, the first one in the CSV is chosen.
+4. Remove those taxa from the outstanding list and choose another useful statement. Stop when no remaining statement covers any new taxon.
+5. Join the selected comparisons into diagnostic prose; add any relevant introductory (`prefix`) or concluding (`suffix`) statements.
+
+For example, imagine you have statements distinguishing species A from B and C using palpal shape, and another distinguishing A from C and D using a tibial spine. taxRmatic will choose the first statement to cover B and C, then use the second to cover D. It will not needlessly repeat C in both clauses. You control *which differences are biologically valid*, and should check the completed diagnosis for clarity and completeness.
+
+**An important limitation:** the program does not discover new diagnostic characters or prove a comparison is valid. It selects from the statements **you have already written**. If one comparison taxon is not covered by any suitable statement, the generation function can warn you. That is a prompt to review your diagnostic data, not to ignore the missing taxon.
+
+### How the three statement types fit together
+
+- A **`comparison`** row is a reusable diagnostic difference. `starting_text`, `taxon`, `comparison_text`, `comparison_taxon` and `statement` combine to form prose. For example, `males of` + `Exemplomygale longipes` + `can be distinguished from those of` + the compared taxa + `by the absence of a discrete clasping spine group on tibia I`. After the first comparison in a category, repeated introductory wording can be shortened.
+- A **`prefix`** row places introductory information before comparisons, for example a note identifying the comparison group. It can apply to one focal taxon or several taxa listed together. If its `specimen_category` is blank, it applies to the diagnosis as a whole; otherwise it belongs to that category.
+- A **`suffix`** row adds concluding information, such as a note on which sex is unavailable. Like a prefix, it can be diagnosis-wide or category-specific.
+
+Here, *prefix* and *suffix* mean **positions of diagnostic statements**, not the character-matrix `prefix` and `suffix` rows that surround individual morphological measurements. They are different mechanisms with similar names.
+
+**How to decide what to put into the diagnostics CSV:** write one row for each biologically defensible comparison (or shared comparison), enter the focal and comparison taxa, and select the appropriate category. Use a prefix or suffix for context that is not itself a differential character. You can refine the prose and rerun the generator until it reads naturally.
+
+## A concrete comparison
+
+The fictional diagnostics table includes a comparison indicating that *Exemplomygale longipes* lacks a discrete clasping spine group on tibia I, unlike certain other imaginary taxa. The table records **which taxa are being compared**, **what character distinguishes them**, and **which figure feature to cite**, rather than storing a complete manually formatted sentence with fixed figure numbers. For example, the underlying fields can be read as:
+
+| Field | Example entry |
+|:--|:--|
+| `taxon_subset` | `north` |
+| `subsection` | `male morphology` |
+| `specimen_category` | `male` |
+| `statement_type` | `comparison` |
+| `taxon` | `Exemplomygale longipes` |
+| `comparison_taxon` | `all` |
+| `figure_filter` | `feature = tibia I` |
+| `statement` | `by the absence of a discrete clasping spine group on tibia I` |
+
+The value `all` has a **specific, restricted meaning**: it expands to other *eligible taxa explicitly represented in comparison rows of that subset and category*, not necessarily every species in your project. This prevents a taxon that appears only in a different evidence category from being silently added to a male comparison. Check the reported comparison pools and the resulting diagnoses, especially when some taxa are known from only one sex or other evidence category.
+
+```{r read-diagnostics}
+diagnostics <- read_taxRmatic_diagnostics(file.path(data_dir, "diagnostics.csv"))
+diagnoses <- get_taxRmatic_diagnoses(
+  diagnostics, figures = figures, separate_categories = TRUE
+)
+```
+
+The `separate_categories` argument determines whether categories are printed as separate paragraphs. For example, `TRUE` is useful for separate male and female paragraphs, while `FALSE` combines the diagnosis into one unheaded paragraph. The `subsection` names provide the headings where categories are separated. See the customisation vignette for alternatives. Automated assembly is not a substitute for reviewing the meaning, grammatical coherence and completeness of every diagnosis.
+
+# 5. Additional sections: keep free text free
+
+## Why not put everything in a character matrix?
+
+Some manuscript content is already best written as prose: an etymology, a conservation assessment, distribution remarks, habitat observations or a discussion of taxonomic history. There is little value in breaking these passages into character cells merely so that taxRmatic can process them. The `sections.csv` table provides a way to import such text **without losing control of where it appears in the final treatment**.
+
+The required columns are `taxon`, `section`, `subsection` and `text`. `taxon`, `section` and `text` must contain values; `subsection` can be blank. Each row becomes **one separate paragraph**. The `section` field determines which named object is returned by `read_taxRmatic_sections()`, and the optional `subsection` field supplies a heading within that section.
+
+Why make a row equal one paragraph? Because two consecutive paragraphs under *Remarks* should remain two paragraphs even when they share a subsection heading. Using one row per paragraph avoids having to hide line-break commands in CSV cells. If three rows share the subsection `Natural history`, the heading is printed once at the start of that consecutive run; the three paragraphs remain separate.
+
+The same `sections.csv` may contain only Etymology and Remarks in a small revision, but add Distribution or Conservation in a larger one. The package does not prescribe which sections are required for a valid taxonomic treatment.
+
+```{r read-sections}
+sections <- read_taxRmatic_sections(file.path(data_dir, "sections.csv"))
+names(sections)   # Inspect the available sections before compiling.
+```
+
+**Important:** a section absent from `sections.csv` is not an empty section object. For example, if you request `sections$barcode` but no `barcode` section was imported, R returns `NULL`. Including that in the compilation list is an error. You should remove that entry from the list rather than add dummy text to every taxon. A section may also exist for some taxa but not others; the compiler simply omits it for taxa without rows.
+
+# 6. How the five tables become one manuscript
+
+Once imported, descriptions, diagnoses, material examined and user-written sections are transformed into a common **`taxRmatic_section`** representation. This is why they can be assembled without the compiler needing to understand the biological origin of each paragraph. Figure metadata remain available as a separate `taxRmatic_figures` object.
+
+The full workflow is intentionally linear:
+
+1. **Read** the five CSV files.
+2. **Prepare** optional printable specimen fields.
+3. **Generate** diagnoses, descriptions and material examined.
+4. **Compile** them with the imported free-text sections, in the desired order.
+5. **Finalise** figure tags and scientific-name formatting.
+6. **Write** Markdown or Word output.
+
+```{r compile-overview}
+# This is an excerpt from the complete script: the objects are created
+# in preceding steps of 01_basic_workflow.R.
+compiled <- compile_taxon_texts(
+  list(
+    Figures = figures,
+    "Material examined" = material_examined,
+    Diagnosis = diagnoses,
+    Description = descriptions,
+    Etymology = sections$etymology,
+    Remarks = sections$remarks
+  ),
+  taxa = all_taxa,
+  taxon_order = all_taxa
+)
+```
+
+The names of the list elements supply section headings, and their order controls section order. The `Figures` object is handled specially as figure metadata rather than a prose section. **Nothing about this workflow requires the taxonomic treatments to resemble the example's treatment layout.** The next vignette, *Customising taxonomic treatments with taxRmatic*, explains how to change the layout and wording without rebuilding the workflow.
+
+## Start a small revision of your own
+
+Start by copying the five example CSVs to a separate project folder. Keep only two or three of your own taxa. Replace the biological columns and specimen records gradually, but retain the reserved column names and instruction row types. Make sure the taxon names and specimen identifiers match across files. Run the readers one by one, then generate the description and material sections before attempting a full manuscript. Once you have one treatment you like, scaling to more taxa usually involves adding rows rather than rewriting the R script.
+
+**Where to look if something goes wrong:** the error message from a `read_taxRmatic_*()` function is usually about the structure of a specific CSV; an error from `compile_taxon_texts()` often means a missing or invalid named section; an unresolved `fg{...}` tag points to figure matching or finalisation. The function help files (`?read_taxRmatic_character_state_matrix`, `?read_taxRmatic_diagnostics`, `?get_taxRmatic_material_examined`, etc.) provide the complete argument reference. This vignette is intended to explain the choices behind those rules, not replace the technical documentation.
+
+# Guided practice: change one thing at a time
+
+Once the unchanged example works, use the CSV copies in your practice folder for these three small exercises. **Make only one change at a time**, run your copied `my_workflow.R`, and compare its new manuscript with the previous output.
+
+**Exercise A — a descriptive character.** Open `character_state_matrix.csv`. Find one `description` row and a character column whose `print` instruction is `y`. Change that specimen's value (for example, alter a colour description, without changing the character's column heading). Save as CSV, rerun the script, and find the updated phrase in the corresponding species description. This shows how biological observations remain separate from the rules for writing them.
+
+**Exercise B — a written paragraph.** Open `sections.csv` and change one sentence in the `text` column of a Remarks row. Save and rerun. Only the relevant paragraph should change. Try adding a *second* row for the same taxon and section: you should see a second paragraph, not an extension of the first.
+
+**Exercise C — a figure number.** Open `figures.csv` and inspect a figure part that is referenced in a description. You can experiment with a figure number **only if the change keeps figure-number/part combinations unique and the lettered/unlettered structure consistent**. Rerun and check the citation. Figure numbers are found from the metadata; they do not have to be typed into every descriptive statement.
+
+**Exercise D — a diagnostic statement.** Open `diagnostics.csv` and find a `comparison` row for a fictional taxon. Change only the wording in its `statement` cell, without changing the taxon names or the biological meaning. Save, rerun, and locate the diagnosis. You may find that the edited statement is not printed for every focal species listed in that row: the iterative generator chooses a useful set of comparisons, rather than simply printing all rows. Use the diagnostic explanation above to understand why.
+
+If your output looks wrong, work backwards: *Is the source cell correct? Does its instruction row or filter identify it? Is that species included in the final `all_taxa` list?* This is usually more productive than manually correcting the generated Word document, because any manual edits to generated text would be lost the next time it is produced.
+
+## Common problems and what to check
+
+| What you see | Likely cause | What to do |
+|:--|:--|:--|
+| `file not found` | The script is pointing at the wrong folder | Check `data_dir`, the filename and `file.exists(file.path(data_dir, "sections.csv"))` |
+| A character is rejected on import | A printed character has no `paragraph` or `sentence` instruction | Find that column in `character_state_matrix.csv` and complete those instruction rows |
+| A specimen appears under the wrong heading | `type_status`, `country` or `state` is inconsistent | Use type status only for genuine type material, and leave it blank for non-types |
+| A figure is missing or incorrect | Figure metadata or `specimen_code` does not match | Check `figures.csv`, its tags, and the matching identifiers in the other tables |
+| A section is missing | It was not imported or not included in the compilation list | Inspect `names(sections)` and the `list(...)` passed to `compile_taxon_texts()` |
+| A figure placeholder `fg{...}` remains | Its filter was not resolved | Check the filter against your figure metadata, then rerun finalisation |
+| The output file is hard to find | The script saved to a different working directory | Run `getwd()` or edit the `output_path` line |
+
+**What next?** Read *Customising taxonomic treatments with taxRmatic* to adjust section order, headings, specimen formatting and figure references without rebuilding the workflow. When a particular option is not covered, type `?function_name` in the Console (for example, `?get_taxRmatic_material_examined`) to open its help page.

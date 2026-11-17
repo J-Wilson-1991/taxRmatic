@@ -1,0 +1,13 @@
+regno,type_status,country,state,taxon,specimen counts,exact location,latitude dd,longitude dd,elevation (m),microhabitat,collection date,collectors,collection method
+9001,paratype,Fictitia,North Province,Exemplomygale rotundata,1 ♀,"Misty Hollow, test pit 2",-15.5800,131.8200,110,beneath shrubs,12 Oct 2023,D. Fiction,excavated from a burrow
+9002,holotype,Fictitia,North Province,Exemplomygale rotundata,1 ♂,"Misty Hollow, test pit 3",-15.6100,131.8600,117,sandy gully,10 Oct 2023,D. Fiction,intercept trap
+9003,,Fictitia,North Province,Exemplomygale rotundata,1 juv.,"Misty Hollow, test pit 3",-15.6100,131.8600,124,rocky slope,10 Oct 2023,D. Fiction,hand collected
+9004,,Fictitia,North Province,Exemplomygale rotundata,1 juv.,"Misty Hollow, test pit 3",-15.6100,131.8600,131,open woodland,10 Oct 2023,D. Fiction,hand collected
+9005,paratype,Fictitia,North Province,Exemplomygale rotundata,1 ♂,"Misty Hollow, test pit 5",-15.6500,131.9000,138,beneath shrubs,18 Nov 2023,D. Fiction,intercept trap
+9006,holotype,Fictitia,North Province,Exemplomygale spinosa,1 ♂,"Ember Ridge, survey quadrat C",-16.1200,131.6600,110,sandy gully,8–19 Aug 2023,B. Sample,intercept trap
+9007,holotype,Fictitia,North Province,Exemplomygale angulata,1 ♂,"Redleaf Plateau, station A",-16.6500,131.5300,117,rocky slope,4–18 Jul 2022,E. Placeholder,intercept trap
+9008,,Fictitia,North Province,Exemplomygale angulata,1 ♀,"Redleaf Plateau, station B",-16.6800,131.4900,124,open woodland,7 May 2024,E. Placeholder,excavated from a burrow
+9009,,Fictitia,North Province,Exemplomygale angulata,1 ♀,"Redleaf Plateau, station D",-16.7400,131.4400,131,beneath shrubs,11 Jun 2024,E. Placeholder,excavated from a burrow
+9010,,Fictitia,North Province,Exemplomygale silvatica,1 ♀,"Briarwood Trial Plot, north transect",-15.8400,131.2700,138,sandy gully,9 Mar 2024,A. Example,excavated from a burrow
+9011,holotype,Fictitia,North Province,Exemplomygale longipes,1 ♂,"Quartz Basin, sample station 4",-16.3800,131.0500,110,rocky slope,6–24 Sep 2023,C. Demonstrator,intercept trap
+9012,holotype,Fictitia,North Province,Exemplomygale silvatica,1 ♀,"Briarwood Trial Plot, east transect",-15.8100,131.3300,117,open woodland,13 Apr 2024,A. Example,excavated from a burrow

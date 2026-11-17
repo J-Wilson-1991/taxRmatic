@@ -1,0 +1,103 @@
+figure_number,figure_part,tag,side,feature,angle,comment,region,taxon,myg_code,specimen_code,specimen_category,type_status,scale
+1,,demo_map,,,,,north,,,,,,
+2,A,,,prosoma,dorsal,,north,Exemplomygale silvatica,EXM-01,DEMO 9012,female,holotype,1 mm
+2,B,,,prosoma,ventral,,north,Exemplomygale silvatica,EXM-01,DEMO 9012,female,holotype,
+2,C,silvatica_eye_detail,,eye group,dorsal,,north,Exemplomygale silvatica,EXM-01,DEMO 9012,female,holotype,
+2,D,,,fovea,dorsal,,north,Exemplomygale silvatica,EXM-01,DEMO 9012,female,holotype,
+2,E,,,sternum and labium,ventral,,north,Exemplomygale silvatica,EXM-01,DEMO 9012,female,holotype,
+2,F,,,abdomen,dorsal,,north,Exemplomygale silvatica,EXM-01,DEMO 9012,female,holotype,
+2,G,,,abdomen,ventral,,north,Exemplomygale silvatica,EXM-01,DEMO 9012,female,holotype,
+2,H,,,mouthparts,ventral,,north,Exemplomygale silvatica,EXM-01,DEMO 9012,female,holotype,
+2,I,,right,leg I,prolateral,,north,Exemplomygale silvatica,EXM-01,DEMO 9012,female,holotype,1 mm
+2,J,,right,leg I,retrolateral,,north,Exemplomygale silvatica,EXM-01,DEMO 9012,female,holotype,
+2,K,,,spermathecae,dorsal,,north,Exemplomygale silvatica,EXM-01,DEMO 9012,female,holotype,0.2 mm
+3,A,,,prosoma,dorsal,,north,Exemplomygale spinosa,EXM-02,DEMO 9006,male,holotype,1 mm
+3,B,,,prosoma,ventral,,north,Exemplomygale spinosa,EXM-02,DEMO 9006,male,holotype,
+3,C,,,eye group,dorsal,,north,Exemplomygale spinosa,EXM-02,DEMO 9006,male,holotype,
+3,D,,,fovea,dorsal,,north,Exemplomygale spinosa,EXM-02,DEMO 9006,male,holotype,
+3,E,,,sternum and labium,ventral,,north,Exemplomygale spinosa,EXM-02,DEMO 9006,male,holotype,
+3,F,,,abdomen,dorsal,,north,Exemplomygale spinosa,EXM-02,DEMO 9006,male,holotype,
+3,G,,,abdomen,ventral,,north,Exemplomygale spinosa,EXM-02,DEMO 9006,male,holotype,
+3,H,,,mouthparts,ventral,,north,Exemplomygale spinosa,EXM-02,DEMO 9006,male,holotype,
+3,I,,left,leg I,prolateral,,north,Exemplomygale spinosa,EXM-02,DEMO 9006,male,holotype,1 mm
+3,J,,left,leg I,retrolateral,,north,Exemplomygale spinosa,EXM-02,DEMO 9006,male,holotype,
+3,K,,left,tibia I,prolateral,,north,Exemplomygale spinosa,EXM-02,DEMO 9006,male,holotype,1 mm
+4,A,,left ,pedipalp,retrolateral,,north,Exemplomygale spinosa,EXM-02,DEMO 9006,male,holotype,1 mm
+4,B,,left ,pedipalp,retroventral,,north,Exemplomygale spinosa,EXM-02,DEMO 9006,male,holotype,
+4,C,,left ,pedipalp,prolateral,,north,Exemplomygale spinosa,EXM-02,DEMO 9006,male,holotype,
+4,D,,left ,copulatory organ,prolateral,,north,Exemplomygale spinosa,EXM-02,DEMO 9006,male,holotype,1 mm
+4,E,,left ,copulatory organ,retrolateral,,north,Exemplomygale spinosa,EXM-02,DEMO 9006,male,holotype,
+4,F,,left ,copulatory organ,retroventral,,north,Exemplomygale spinosa,EXM-02,DEMO 9006,male,holotype,
+5,A,,,prosoma,dorsal,,north,Exemplomygale longipes,EXM-03,DEMO 9011,male,holotype,1 mm
+5,B,,,prosoma,ventral,,north,Exemplomygale longipes,EXM-03,DEMO 9011,male,holotype,
+5,C,longipes_eye_detail,,eye group,dorsal,,north,Exemplomygale longipes,EXM-03,DEMO 9011,male,holotype,
+5,D,,,fovea,dorsal,,north,Exemplomygale longipes,EXM-03,DEMO 9011,male,holotype,
+5,E,,,sternum and labium,ventral,,north,Exemplomygale longipes,EXM-03,DEMO 9011,male,holotype,
+5,F,,,abdomen,dorsal,,north,Exemplomygale longipes,EXM-03,DEMO 9011,male,holotype,
+5,G,,,abdomen,ventral,,north,Exemplomygale longipes,EXM-03,DEMO 9011,male,holotype,
+5,H,,,mouthparts,ventral,,north,Exemplomygale longipes,EXM-03,DEMO 9011,male,holotype,
+5,I,,left ,leg I,prolateral,,north,Exemplomygale longipes,EXM-03,DEMO 9011,male,holotype,1 mm
+5,J,,left ,leg I,retrolateral,,north,Exemplomygale longipes,EXM-03,DEMO 9011,male,holotype,
+5,K,,left ,tibia I,prolateral,,north,Exemplomygale longipes,EXM-03,DEMO 9011,male,holotype,1 mm
+6,A,,left ,pedipalp,retrolateral,,north,Exemplomygale longipes,EXM-03,DEMO 9011,male,holotype,1 mm
+6,B,,left ,pedipalp,retroventral,,north,Exemplomygale longipes,EXM-03,DEMO 9011,male,holotype,
+6,C,,left ,pedipalp,prolateral,,north,Exemplomygale longipes,EXM-03,DEMO 9011,male,holotype,
+6,D,,left ,copulatory organ,prolateral,,north,Exemplomygale longipes,EXM-03,DEMO 9011,male,holotype,1 mm
+6,E,,left ,copulatory organ,retrolateral,,north,Exemplomygale longipes,EXM-03,DEMO 9011,male,holotype,
+6,F,,left ,copulatory organ,retroventral,,north,Exemplomygale longipes,EXM-03,DEMO 9011,male,holotype,1 mm
+7,A,,,prosoma,dorsal,,north,Exemplomygale rotundata,EXM-04,DEMO 9002,male,holotype,1 mm
+7,B,,,prosoma,ventral,,north,Exemplomygale rotundata,EXM-04,DEMO 9002,male,holotype,
+7,C,,,eye group,dorsal,,north,Exemplomygale rotundata,EXM-04,DEMO 9002,male,holotype,
+7,D,,,fovea,dorsal,,north,Exemplomygale rotundata,EXM-04,DEMO 9002,male,holotype,
+7,E,,,sternum and labium,ventral,,north,Exemplomygale rotundata,EXM-04,DEMO 9002,male,holotype,
+7,F,,,abdomen,dorsal,,north,Exemplomygale rotundata,EXM-04,DEMO 9002,male,holotype,
+7,G,,,abdomen,ventral,,north,Exemplomygale rotundata,EXM-04,DEMO 9002,male,holotype,
+7,H,,,mouthparts,ventral,,north,Exemplomygale rotundata,EXM-04,DEMO 9002,male,holotype,
+7,I,,left,leg I,prolateral,,north,Exemplomygale rotundata,EXM-04,DEMO 9002,male,holotype,1 mm
+7,J,,left,leg I,retrolateral,,north,Exemplomygale rotundata,EXM-04,DEMO 9002,male,holotype,
+7,K,,left,tibia I,prolateral,,north,Exemplomygale rotundata,EXM-04,DEMO 9002,male,holotype,1 mm
+8,A,,left ,pedipalp,retrolateral,,north,Exemplomygale rotundata,EXM-04,DEMO 9002,male,holotype,1 mm
+8,B,,left ,pedipalp,retroventral,,north,Exemplomygale rotundata,EXM-04,DEMO 9002,male,holotype,
+8,C,,left ,pedipalp,prolateral,,north,Exemplomygale rotundata,EXM-04,DEMO 9002,male,holotype,
+8,D,,left ,copulatory organ,prolateral,,north,Exemplomygale rotundata,EXM-04,DEMO 9002,male,holotype,1 mm
+8,E,,left ,copulatory organ,retrolateral,,north,Exemplomygale rotundata,EXM-04,DEMO 9002,male,holotype,
+8,F,,left ,copulatory organ,retroventral,,north,Exemplomygale rotundata,EXM-04,DEMO 9002,male,holotype,
+9,A,,,prosoma,dorsal,,north,Exemplomygale rotundata,EXM-04,DEMO 9001,female,paratype,1 mm
+9,B,,,prosoma,ventral,,north,Exemplomygale rotundata,EXM-04,DEMO 9001,female,paratype,
+9,C,,,eye group,dorsal,,north,Exemplomygale rotundata,EXM-04,DEMO 9001,female,paratype,
+9,D,,,fovea,dorsal,,north,Exemplomygale rotundata,EXM-04,DEMO 9001,female,paratype,
+9,E,,,sternum and labium,ventral,,north,Exemplomygale rotundata,EXM-04,DEMO 9001,female,paratype,
+9,F,,,abdomen,dorsal,,north,Exemplomygale rotundata,EXM-04,DEMO 9001,female,paratype,
+9,G,,,abdomen,ventral,,north,Exemplomygale rotundata,EXM-04,DEMO 9001,female,paratype,
+9,H,,,mouthparts,ventral,,north,Exemplomygale rotundata,EXM-04,DEMO 9001,female,paratype,
+9,I,,left,leg I,prolateral,,north,Exemplomygale rotundata,EXM-04,DEMO 9001,female,paratype,1 mm
+9,J,,left,leg I,retrolateral,,north,Exemplomygale rotundata,EXM-04,DEMO 9001,female,paratype,
+9,K,,,spermathecae,dorsal,,north,Exemplomygale rotundata,EXM-04,DEMO 9001,female,paratype,0.2 mm
+10,A,,,prosoma,dorsal,,north,Exemplomygale angulata,EXM-05,DEMO 9007,male,holotype,1 mm
+10,B,,,prosoma,ventral,,north,Exemplomygale angulata,EXM-05,DEMO 9007,male,holotype,
+10,C,,,eye group,dorsal,,north,Exemplomygale angulata,EXM-05,DEMO 9007,male,holotype,
+10,D,,,fovea,dorsal,,north,Exemplomygale angulata,EXM-05,DEMO 9007,male,holotype,
+10,E,,,sternum and labium,ventral,,north,Exemplomygale angulata,EXM-05,DEMO 9007,male,holotype,
+10,F,,,abdomen,dorsal,,north,Exemplomygale angulata,EXM-05,DEMO 9007,male,holotype,
+10,G,,,abdomen,ventral,,north,Exemplomygale angulata,EXM-05,DEMO 9007,male,holotype,
+10,H,,,mouthparts,ventral,,north,Exemplomygale angulata,EXM-05,DEMO 9007,male,holotype,
+10,I,,left,leg I,prolateral,,north,Exemplomygale angulata,EXM-05,DEMO 9007,male,holotype,1 mm
+10,J,,left,leg I,retrolateral,,north,Exemplomygale angulata,EXM-05,DEMO 9007,male,holotype,
+10,K,,left,tibia I,prolateral,,north,Exemplomygale angulata,EXM-05,DEMO 9007,male,holotype,1 mm
+11,A,,left ,pedipalp,retrolateral,,north,Exemplomygale angulata,EXM-05,DEMO 9007,male,holotype,1 mm
+11,B,,left ,pedipalp,retroventral,,north,Exemplomygale angulata,EXM-05,DEMO 9007,male,holotype,
+11,C,,left ,pedipalp,prolateral,,north,Exemplomygale angulata,EXM-05,DEMO 9007,male,holotype,
+11,D,,left ,copulatory organ,prolateral,,north,Exemplomygale angulata,EXM-05,DEMO 9007,male,holotype,1 mm
+11,E,,left ,copulatory organ,retrolateral,,north,Exemplomygale angulata,EXM-05,DEMO 9007,male,holotype,
+11,F,,left ,copulatory organ,retroventral,,north,Exemplomygale angulata,EXM-05,DEMO 9007,male,holotype,
+12,A,,,prosoma,dorsal,,north,Exemplomygale angulata,EXM-05,DEMO 9008,female,paratype,1 mm
+12,B,,,prosoma,ventral,,north,Exemplomygale angulata,EXM-05,DEMO 9008,female,paratype,
+12,C,,,eye group,dorsal,,north,Exemplomygale angulata,EXM-05,DEMO 9008,female,paratype,
+12,D,,,fovea,dorsal,,north,Exemplomygale angulata,EXM-05,DEMO 9008,female,paratype,
+12,E,,,sternum and labium,ventral,,north,Exemplomygale angulata,EXM-05,DEMO 9008,female,paratype,
+12,F,,,abdomen,dorsal,,north,Exemplomygale angulata,EXM-05,DEMO 9008,female,paratype,
+12,G,,,abdomen,ventral,,north,Exemplomygale angulata,EXM-05,DEMO 9008,female,paratype,
+12,H,,,mouthparts,ventral,,north,Exemplomygale angulata,EXM-05,DEMO 9008,female,paratype,
+12,I,,left,leg I,prolateral,,north,Exemplomygale angulata,EXM-05,DEMO 9008,female,paratype,1 mm
+12,J,,left,leg I,retrolateral,,north,Exemplomygale angulata,EXM-05,DEMO 9008,female,paratype,
+12,K,,,spermathecae,dorsal,,north,Exemplomygale angulata,EXM-05,DEMO 9008,female,paratype,0.2 mm

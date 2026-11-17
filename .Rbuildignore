@@ -1,0 +1,8 @@
+^LICENSE\.md$
+^README\.Rmd$
+^\.github$
+^\.gitignore$
+^REVIEW_AND_RELEASE_NOTES\.md$
+^SOURCE_SCRIPT_INVENTORY\.md$
+^.*\.Rproj$
+^\.Rproj\.user$

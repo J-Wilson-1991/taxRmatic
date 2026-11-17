@@ -1,0 +1,18 @@
+Package: taxRmatic
+Title: Generate Taxonomic Treatments from Tabular Data
+Version: 0.1.0
+Authors@R: person("Jeremy", "Wilson", email = "jeremydwilson91@gmail.com", role = c("aut", "cre"))
+Description: Tools for assembling taxonomic treatments from tabular datasets.
+    Supports character-state descriptions, iterative comparative diagnoses,
+    material examined, figure references and captions, and user-written
+    sections. Compiles sections into formatted manuscript text with flexible
+    taxon ordering and heading presentation, and can export Markdown or Word
+    documents.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Suggests:
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

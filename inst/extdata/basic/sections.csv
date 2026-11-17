@@ -1,0 +1,11 @@
+region,taxon,section,subsection,text
+north,Exemplomygale silvatica,etymology,,The epithet “silvatica” refers to the wooded habitat surrounding the fictional Briarwood Trial Plot (fg{tag = demo_map}).
+north,Exemplomygale silvatica,remarks,,Known only from the imaginary Briarwood Trial Plot. Males are unknown in the example dataset.
+north,Exemplomygale spinosa,etymology,,"The epithet “spinosa” is derived from Latin, meaning “spiny”, in reference to the clasping macrospines on tibia I."
+north,Exemplomygale spinosa,remarks,,"Known only from the fictional Ember Ridge locality, based on the single male specimen in the example dataset."
+north,Exemplomygale longipes,etymology,,The epithet “longipes” refers to the elongate first legs of the illustrated male.
+north,Exemplomygale longipes,remarks,,Recorded from the imaginary Quartz Basin; the male lacks a tibial clasping comb (fg{tag = demo_map}).
+north,Exemplomygale rotundata,etymology,,The epithet “rotundata” refers to the rounded distal embolar process and spermathecal crowns.
+north,Exemplomygale rotundata,remarks,,"Both sexes are represented, with several non-type collections from the imaginary Misty Hollow locality."
+north,Exemplomygale angulata,etymology,,The epithet “angulata” refers to the angular projections on the male embolus and female spermathecae.
+north,Exemplomygale angulata,remarks,,This species is represented by both sexes from the fictional Redleaf Plateau area.
